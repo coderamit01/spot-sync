@@ -20,7 +20,7 @@ func ConnectDB() {
 	db.AutoMigrate(
 		&models.User{},
 		&models.ParkingZone{},
-		&models.Reservation{}
+		&models.Reservation{},
 	)
 	DB = db
 	log.Println("Database connected successfully", err)
