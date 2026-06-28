@@ -39,7 +39,11 @@ func main() {
 	authService := service.NewAuthService(userRepo)
 	authHandler := handler.NewAuthHandler(authService)
 
-	routes.Routes(e, authHandler)
+	zoneRepo := repository.NewZoneRepository(config.DB)
+	zoneService := service.NewZoneService(zoneRepo)
+	zoneHandler := handler.NewZoneHandler(zoneService)
+
+	routes.Routes(e, authHandler,zoneHandler)
 
 	port := os.Getenv("PORT")
 	if port == "" {

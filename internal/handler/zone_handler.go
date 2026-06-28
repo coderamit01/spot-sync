@@ -21,31 +21,31 @@ func (h *ZoneHandler) CreateZone(c echo.Context) error {
 	var req dto.ZoneRequest
 
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"success": false,
-			"message": "Invalid request body",
+		return c.JSON(http.StatusBadRequest, dto.ErrorResponse{
+			Success: false,
+			Message: "Invalid request body",
 		})
 	}
 
 	if err := c.Validate(&req); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"success": false,
-			"message": err.Error(),
+		return c.JSON(http.StatusBadRequest, dto.ErrorResponse{
+			Success: false,
+			Message: err.Error(),
 		})
 	}
 
 	result, err := h.zoneService.CreateZone(&req)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"success": false,
-			"message": err.Error(),
+		return c.JSON(http.StatusInternalServerError, dto.ErrorResponse{
+			Success: false,
+			Message: err.Error(),
 		})
 	}
 
-	return c.JSON(http.StatusCreated, map[string]interface{}{
-		"success": true,
-		"message": "Parking zone created successfully",
-		"data":    result,
+	return c.JSON(http.StatusCreated, dto.APIResponse{
+		Success: true,
+		Message: "Parking zone created successfully",
+		Data:    result,
 	})
 
 }
@@ -53,45 +53,45 @@ func (h *ZoneHandler) CreateZone(c echo.Context) error {
 func (h *ZoneHandler) GetAllZones(c echo.Context) error {
 	result, err := h.zoneService.GetAllZones()
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"success": false,
-			"message": err.Error(),
+		return c.JSON(http.StatusInternalServerError, dto.ErrorResponse{
+			Success: false,
+			Message: err.Error(),
 		})
 	}
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"success": true,
-		"message": "Parking zones retrieved successfully",
-		"data":    result,
+	return c.JSON(http.StatusOK, dto.APIResponse{
+		Success: true,
+		Message: "Parking zones retrieved successfully",
+		Data:    result,
 	})
 }
 
 func (h *ZoneHandler) GetZoneById(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"success": false,
-			"message": "Invalid zone ID",
+		return c.JSON(http.StatusBadRequest, dto.ErrorResponse{
+			Success: false,
+			Message: "Invalid zone ID",
 		})
 	}
 
 	result, err := h.zoneService.GetZoneById(uint(id))
 	if err != nil {
 		if err.Error() == "zone not found" {
-			return c.JSON(http.StatusNotFound, map[string]interface{}{
-				"success": false,
-				"message": "Zone not found",
+			return c.JSON(http.StatusNotFound, dto.ErrorResponse{
+				Success: false,
+				Message: "Zone not found",
 			})
 		}
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"success": false,
-			"message": err.Error(),
+		return c.JSON(http.StatusInternalServerError, dto.ErrorResponse{
+			Success: false,
+			Message: err.Error(),
 		})
 	}
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"success": true,
-		"message": "Parking zone retrieved successfully",
-		"data":    result,
+	return c.JSON(http.StatusOK, dto.APIResponse{
+		Success: true,
+		Message: "Parking zone retrieved successfully",
+		Data:    result,
 	})
 }
