@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func Routes(e *echo.Echo, authHandler *handler.AuthHandler, zoneHandler *handler.ZoneHandler) {
+func Routes(e *echo.Echo, authHandler *handler.AuthHandler, zoneHandler *handler.ZoneHandler, reservationHandler *handler.ReservationHandler) {
 
 	e.GET("/", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]interface{}{
@@ -29,4 +29,12 @@ func Routes(e *echo.Echo, authHandler *handler.AuthHandler, zoneHandler *handler
 	zones.GET("", zoneHandler.GetAllZones)
 	zones.GET("/:id", zoneHandler.GetZoneById)
 	zones.POST("", zoneHandler.CreateZone, middleware.AuthMiddleware, middleware.AdminOnly)
+
+	// Reservations
+	reservations := api.Group("/reservations", middleware.AuthMiddleware)
+	reservations.POST("", reservationHandler.CreateReservation)
+	reservations.GET("/my-reservations", reservationHandler.GetMyReservations)
+	reservations.DELETE("/:id", reservationHandler.CancelReservation)
+	reservations.GET("", reservationHandler.GetAllReservations, middleware.AdminOnly)
+
 }
