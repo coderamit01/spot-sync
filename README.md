@@ -2,7 +2,7 @@
 
 A smart parking and EV charging reservation system for airports and malls.
 
-**Live URL:** `https://your-deployment-url.onrender.com`
+**Live URL:** `https://spot-sync-q2uf.onrender.com`
 
 ---
 

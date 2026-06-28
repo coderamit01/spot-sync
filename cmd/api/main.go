@@ -24,10 +24,7 @@ func (cv *CustomValidator) Validate(i interface{}) error {
 }
 
 func main() {
-	if err := godotenv.Load(); err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
+	godotenv.Load()
 	config.ConnectDB()
 
 	e := echo.New()
