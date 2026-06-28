@@ -5,7 +5,7 @@ import (
 	"spotsync/internal/dto"
 	"spotsync/internal/service"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 type AuthHandler struct {
