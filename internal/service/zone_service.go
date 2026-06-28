@@ -11,8 +11,8 @@ import (
 
 type ZoneService interface {
 	CreateZone(req *dto.ZoneRequest) (*dto.ZoneResponse, error)
-	GetAllZones() ([]dto.ZoneResponse, error)
-	GetZoneById(id uint) (*dto.ZoneResponse, error)
+	GetAllZones() ([]dto.ZoneResponseWithAvailableSpot, error)
+	GetZoneById(id uint) (*dto.ZoneResponseWithAvailableSpot, error)
 }
 
 type zoneService struct {
@@ -47,19 +47,19 @@ func (s *zoneService) CreateZone(req *dto.ZoneRequest) (*dto.ZoneResponse, error
 
 }
 
-func (s *zoneService) GetAllZones() ([]dto.ZoneResponse, error) {
+func (s *zoneService) GetAllZones() ([]dto.ZoneResponseWithAvailableSpot, error) {
 	zones, err := s.zoneRepo.GetAllZones()
 	if err != nil {
 		return nil, err
 	}
 
-	var result []dto.ZoneResponse
+	var result []dto.ZoneResponseWithAvailableSpot
 	for _, zone := range zones {
 		count, err := s.zoneRepo.CountActiveReservations(zone.Id)
 		if err != nil {
 			return nil, err
 		}
-		result = append(result, dto.ZoneResponse{
+		result = append(result, dto.ZoneResponseWithAvailableSpot{
 			Id:             zone.Id,
 			Name:           zone.Name,
 			Type:           zone.Type,
@@ -72,7 +72,7 @@ func (s *zoneService) GetAllZones() ([]dto.ZoneResponse, error) {
 	return result, nil
 }
 
-func (s *zoneService) GetZoneById(id uint) (*dto.ZoneResponse, error) {
+func (s *zoneService) GetZoneById(id uint) (*dto.ZoneResponseWithAvailableSpot, error) {
 	zone, err := s.zoneRepo.GetZoneById(id)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -86,7 +86,7 @@ func (s *zoneService) GetZoneById(id uint) (*dto.ZoneResponse, error) {
 		return nil, err
 	}
 
-	return &dto.ZoneResponse{
+	return &dto.ZoneResponseWithAvailableSpot{
 		Id:             zone.Id,
 		Name:           zone.Name,
 		Type:           zone.Type,
